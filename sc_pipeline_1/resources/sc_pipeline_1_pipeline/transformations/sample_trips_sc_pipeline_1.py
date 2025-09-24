@@ -1,5 +1,5 @@
 import dlt
-from pyspark.sql.functions import col
+from pyspark.sql.functions import col, expr
 from utilities import utils
 
 
