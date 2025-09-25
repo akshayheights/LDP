@@ -1,0 +1,11 @@
+resources:
+  pipelines:
+    bundle_2_pipeline:
+      name: bundle_2_pipeline
+      libraries:
+        - glob:
+            include: transformations/**
+      serverless: true
+      catalog: workspace
+      schema: ${workspace.current_user.short_name}
+      root_path: .
