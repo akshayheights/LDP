@@ -1,0 +1,14 @@
+# The main pipeline for bunle_poc
+
+resources:
+  pipelines:
+    bunle_poc_etl:
+      name: bunle_poc_etl
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      serverless: true
+      root_path: "."
+
+      libraries:
+        - glob:
+            include: transformations/**
