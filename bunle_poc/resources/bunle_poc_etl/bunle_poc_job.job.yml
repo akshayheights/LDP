@@ -1,29 +1,30 @@
-# The job that triggers bunle_poc_etl.
-
 resources:
+  clusters:
+    bundle_cluster:
+      spark_version: 13.3.x-scala2.12
+      node_type_id: i3.xlarge
+      num_workers: 1
+
   jobs:
     bunle_poc_job:
       name: bunle_poc_job
 
       trigger:
-        # Run this job every day, exactly one day from the last run; see https://docs.databricks.com/api/workspace/jobs/create#trigger
         periodic:
           interval: 1
           unit: DAYS
-
-      #email_notifications:
-      #  on_failure:
-      #    - your_email@example.com
 
       tasks:
         - task_key: refresh_pipeline
           pipeline_task:
             pipeline_id: ${resources.pipelines.bunle_poc_etl.id}
+
         - task_key: postprocess
           depends_on:
             - task_key: refresh_pipeline
+              wait_for_termination: true
           notebook_task:
-            notebook_path: /Workspace/Users/akshayheights@gmail.com/LDP/bunle_poc/resources/bunle_poc_etl/postprocess.py
+            notebook_path: /Workspace/Users/akshayheights@gmail.com/LDP/bunle_poc/resources/bunle_poc_etl/transformations/postprocess.py
             base_parameters:
               dlt_pipeline_id: ${resources.pipelines.bunle_poc_etl.id}
               dlt_pipeline_run_id: "{{tasks.refresh_pipeline.run_id}}"
